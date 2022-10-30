@@ -17,13 +17,13 @@ class Emailsender extends CI_Controller {
         parent::__construct();
         $this->load->library('email');
 		$this->load->library('imap');
-		define('GmailImapServer','imap.gmail.com:993/imap/ssl');
-		define('SmtpImapServer','mail.thinklogicmediagroup.com:995/pop3/ssl/novalidate-cert');
-		define('GmailSmtpServer','ssl://smtp.googlemail.com');
-		define('GmailSmtpServerPort',465);
-		define('OpsSmtpServer','mail.thinklogicmediagroup.com');
-		define('OpsSmtpServerPort',587);
-		define('EmailSenderTest','test@ops.thinklogicmediagroup.com');
+		define('GmailImapServer','imap.gmail.com:993/imap/ssl');//this is gmail default
+		define('SmtpImapServer','emailhostname:995/pop3/ssl/novalidate-cert');//depend on your smtp server
+		define('GmailSmtpServer','ssl://smtp.googlemail.com');//this is gmail smtp hostname
+		define('GmailSmtpServerPort',465);//this is gmail smtp port
+		define('OpsSmtpServer','emailhostname');//smtp hostname ex:mail.domainname.com
+		define('OpsSmtpServerPort',587);//smtp port of your mail server
+		define('EmailSenderTest','email sender for test');//email for sender to check if the username and password is valid
 
 		
 
@@ -82,7 +82,7 @@ class Emailsender extends CI_Controller {
 				}
 	}
 	
-	function uploadDoc()
+	function uploadDoc()//To upload file
 	{
 		$resetDIR = __DIR__ .'/../../assets';
 		shell_exec("rm -R " . $resetDIR);
@@ -108,7 +108,7 @@ class Emailsender extends CI_Controller {
 			}
 		
 	}
-	public function Ops()
+	public function Ops()//Send using your email ex: iredmail
 	{
 		$emailReceiver = $this->input->post('emailReceiver', TRUE);
 		$emailSubject = $this->input->post('emailSubject', TRUE);
@@ -141,7 +141,7 @@ class Emailsender extends CI_Controller {
 			echo "Error";
 		}
 	}
-	public function Gmail()
+	public function Gmail()//Send using gmail
 	{	
 		$emailReceiver = $this->input->post('emailReceiver', TRUE);
 		$emailSubject = $this->input->post('emailSubject', TRUE);
@@ -172,7 +172,7 @@ class Emailsender extends CI_Controller {
 		}
 	}
 
-	public function emailCreditialsCheck(){
+	public function emailCreditialsCheck(){//To check if the email and password is valid
 		$smatpServer = $this->input->post('smtpserver', TRUE);
 		$smatpEmail = $this->input->post('smatpemail', TRUE);
 		$smatpPassword = strval($this->input->post('smatppassword'));
@@ -231,13 +231,13 @@ class Emailsender extends CI_Controller {
 			echo "Invalid SMTP Server";
 		}
 	}
-	public function resetConfig(){
+	public function resetConfig(){//To reset
 		$resetDIR = __DIR__ .'/../../assets';
 		shell_exec("rm -R " . $resetDIR);
 		redirect(base_url());
 
 	}
-	function scanbounce()
+	function scanbounce()//This function is to check the email is bounce because email receiver is not exist
     {
 		$gmail_or_ops = $this->input->post('gmail_or_ops', TRUE);
 		$server_email_imap = $this->input->post('server_email_imap', TRUE);
