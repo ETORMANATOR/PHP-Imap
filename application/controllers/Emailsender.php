@@ -1,11 +1,15 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+
 require_once __DIR__ .'/../../vendor/box/spout/src/Spout/Autoloader/autoload.php';
 require_once __DIR__ .'/../../vendor/autoload.php';
+
+
 use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 use benhall14\phpImapReader\Email as Email;
 use benhall14\phpImapReader\EmailAttachment as EmailAttachment;
 use benhall14\phpImapReader\Reader as Reader;
+
 class Emailsender extends CI_Controller {
 
 	function __construct()
@@ -13,6 +17,16 @@ class Emailsender extends CI_Controller {
         parent::__construct();
         $this->load->library('email');
 		$this->load->library('imap');
+		define('GmailImapServer','imap.gmail.com:993/imap/ssl');
+		define('SmtpImapServer','mail.thinklogicmediagroup.com:995/pop3/ssl/novalidate-cert');
+		define('GmailSmtpServer','ssl://smtp.googlemail.com');
+		define('GmailSmtpServerPort',465);
+		define('OpsSmtpServer','mail.thinklogicmediagroup.com');
+		define('OpsSmtpServerPort',587);
+		define('EmailSenderTest','test@ops.thinklogicmediagroup.com');
+
+		
+
     }
 	public function index()
 	{	
@@ -103,8 +117,8 @@ class Emailsender extends CI_Controller {
 		$senderPassword = strval($this->input->post('senderPassword'));
 
 		$config['protocol']    = 'smtp';
-		$config['smtp_host']    = 'mail.thinklogicmediagroup.com';
-		$config['smtp_port']    = 587;
+		$config['smtp_host']    = OpsSmtpServer;
+		$config['smtp_port']    = OpsSmtpServerPort;
 		$config['smtp_timeout'] = '300';
 		$config['smtp_user']    = $senderEmail;
 		$config['smtp_pass']    = $senderPassword;
@@ -117,7 +131,7 @@ class Emailsender extends CI_Controller {
 		$config['validation'] = TRUE;
 					
 		$this->email->initialize($config);
-		$this->email->from($senderEmail,"","returned_emails@ops.thinklogicmediagroup.com");
+		$this->email->from($senderEmail);
 		$this->email->to($emailReceiver);
 		$this->email->subject($emailSubject);
 		$this->email->message($emailHtmlMessage);
@@ -136,8 +150,8 @@ class Emailsender extends CI_Controller {
 		$senderPassword = strval($this->input->post('senderPassword'));
 
 		$config['protocol']    = 'smtp';
-		$config['smtp_host']    = 'ssl://smtp.googlemail.com';
-		$config['smtp_port']    = 465;
+		$config['smtp_host']    = GmailSmtpServer;
+		$config['smtp_port']    = GmailSmtpServerPort;
 		$config['smtp_timeout'] = '300';
 		$config['smtp_user']    = $senderEmail;
 		$config['smtp_pass']    = $senderPassword;
@@ -147,7 +161,7 @@ class Emailsender extends CI_Controller {
 		
 		$this->email->set_newline("\r\n");
 		$this->email->initialize($config);
-		$this->email->from($senderEmail,"","returned_emails@ops.thinklogicmediagroup.com");
+		$this->email->from($senderEmail);
 		$this->email->to($emailReceiver);
 		$this->email->subject($emailSubject);
 		$this->email->message($emailHtmlMessage);
@@ -164,8 +178,8 @@ class Emailsender extends CI_Controller {
 		$smatpPassword = strval($this->input->post('smatppassword'));
 		if($smatpServer == "Gmail"){
 			$config['protocol']    = 'smtp';
-			$config['smtp_host']    = 'ssl://smtp.googlemail.com';
-			$config['smtp_port']    = 465;
+			$config['smtp_host']    = GmailSmtpServer;
+			$config['smtp_port']    = GmailSmtpServerPort;
 			$config['smtp_timeout'] = '300';
 			$config['smtp_user']    = $smatpEmail;
 			$config['smtp_pass']    = $smatpPassword;
@@ -175,8 +189,8 @@ class Emailsender extends CI_Controller {
 			
 			$this->email->set_newline("\r\n");
 			$this->email->initialize($config);
-			$this->email->from($smatpEmail,"","returned_emails@ops.thinklogicmediagroup.com");
-			$this->email->to("test@ops.thinklogicmediagroup.com");
+			$this->email->from($smatpEmail);
+			$this->email->to(EmailSenderTest);
 			$this->email->subject("test");
 			$this->email->message("test");
 			if ($this->email->send()) {
@@ -190,8 +204,8 @@ class Emailsender extends CI_Controller {
 		elseif($smatpServer == "Ops"){
 
 			$config['protocol']    = 'smtp';
-			$config['smtp_host']    = 'mail.thinklogicmediagroup.com';
-			$config['smtp_port']    = 587;
+			$config['smtp_host']    = OpsSmtpServer;
+			$config['smtp_port']    = OpsSmtpServerPort;
 			$config['smtp_timeout'] = '300';
 			$config['smtp_user']    = $smatpEmail;
 			$config['smtp_pass']    = $smatpPassword;
@@ -204,8 +218,8 @@ class Emailsender extends CI_Controller {
 			$config['validation'] = TRUE;
 						
 			$this->email->initialize($config);
-			$this->email->from($smatpEmail,"","returned_emails@ops.thinklogicmediagroup.com");
-			$this->email->to("test@ops.thinklogicmediagroup.com");
+			$this->email->from($smatpEmail);
+			$this->email->to(EmailSenderTest);
 			$this->email->subject("test");
 			$this->email->message("test");
 			if ($this->email->send()) {
@@ -232,11 +246,11 @@ class Emailsender extends CI_Controller {
 		$email_subject = $this->input->post('email_subject', TRUE);
 		
 		if($gmail_or_ops == 'Ops'){
-			$server_imap = '{mail.thinklogicmediagroup.com:995/pop3/ssl/novalidate-cert}';
+			$server_imap = "{".SmtpImapServer."}";
 			$subject_imap = 'Undelivered Mail Returned to Sender';
 		}
 		if($gmail_or_ops == 'Gmail'){
-			$server_imap = '{imap.gmail.com:993/imap/ssl}';
+			$server_imap = "{".GmailImapServer."}";
 			$subject_imap = 'Delivery Status Notification (Failure)';
 		}
 		define('IMAP_USERNAME', $server_email_imap); 				# your imap user name
@@ -260,26 +274,4 @@ class Emailsender extends CI_Controller {
 		}
 
     }
-	function BounceEmail(){
-		$date = date('y-m-d');
-		$hostname = "{mail.thinklogicmediagroup.com:995/pop3/ssl/novalidate-cert}INBOX";
-		//$hostname = "{mail.thinklogicmediagroup.com:143}INBOX";
-         $username = "jonathane@ops.thinklogicmediagroup.com";
-         $password = "P@ssw0rd123";
-         $inbox = imap_open($hostname,$username,$password);
-         if($inbox){
-				
-			$some   = imap_search($inbox, 'SUBJECT "Undelivered Mail Returned to Sender" SINCE "20 October 2022"', SE_UID);
-			$some   = imap_search($inbox, 'KEYWORD "desabbdsgfdsgdfgdy93@gmail.com"');
-			$msgnos = imap_search($inbox, 'ALL');
-			$uids   = imap_search($inbox, 'ALL', SE_UID);
-			
-			print_r($some);
-			print_r($msgnos);
-			print_r($uids);
-         } else {
-            print_r("Connection failed");
-         }
-	}
-
 }	

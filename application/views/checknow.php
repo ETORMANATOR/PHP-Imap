@@ -116,7 +116,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <select id="stmpserverselection" class="custom-select custom-select-lg" style="border: 1px solid #ccc;font-size:1vw;color: #555;" >
                                     <option value="Emptyvalue"selected>Select smtp server</option>
                                     <option value="Gmail">Gmail (G-suite)</option>
-                                    <option value="Ops">Internal Email (example: test@ops.thinklogicmediagroup.com)</option>
+                                    <option value="Ops">Internal Email (SMTP)</option>
                                 </select>
                             </div>
                     </div>
