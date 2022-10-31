@@ -1,5 +1,5 @@
 # PHP-Imap
-Send Bulk Email(HTML) and check email if exist using PHP 
+Send Bulk Email(HTML) and check email if exist using Codeigniter 3
 
 ## Compatibility
 Using Gmail Gsuite only
