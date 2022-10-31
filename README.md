@@ -10,7 +10,7 @@ Using Own email Server
 Note: make use imap your hostname is correct.
 https://www.php.net/manual/en/function.imap-open.php
 
-##Error
+## Error
 error 504 
 * its happen if you check/send more than 50 emails
 How to fixed to prevent 504 time out error in more that 50 email
